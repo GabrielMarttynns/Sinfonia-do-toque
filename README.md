@@ -1,2 +1,2 @@
 # ColorMotion
-Projeto jogos
+Colormotion/jogos
