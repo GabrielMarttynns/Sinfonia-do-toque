@@ -1,0 +1,35 @@
+plugins {
+    id 'application'
+}
+
+dependencies {
+    implementation project(':core')
+    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:${rootProject.gdxVersion}"
+    runtimeOnly "com.badlogicgames.gdx:gdx-platform:${rootProject.gdxVersion}:natives-desktop"
+}
+
+application {
+    mainClass = 'sinfonia.lwjgl3.Lwjgl3Launcher'
+}
+
+tasks.named('run', JavaExec) {
+    workingDir = rootProject.projectDir
+    systemProperty 'sinfonia.debugKeyboard', project.findProperty('debugKeyboard') ?: 'false'
+    systemProperty 'sinfonia.port', project.findProperty('arduinoPort') ?: ''
+    if (System.getProperty('os.name').toLowerCase().contains('mac')) {
+        jvmArgs '-XstartOnFirstThread'
+    }
+}
+
+// Gera um unico JAR para executar no computador com Java instalado.
+tasks.register('fatJar', Jar) {
+    group = 'distribution'
+    description = 'Cria JAR com dependencias para distribuir o jogo.'
+    archiveBaseName = 'SinfoniaDoToque'
+    archiveClassifier = 'completo'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest { attributes 'Main-Class': application.mainClass.get() }
+    dependsOn configurations.runtimeClasspath
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with tasks.named('jar').get()
+}

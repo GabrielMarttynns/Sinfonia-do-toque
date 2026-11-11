@@ -1,0 +1,26 @@
+// Projeto desktop original: libGDX + Arduino (sem Android).
+ext {
+    gdxVersion = '1.14.2'
+    serialVersion = '2.11.4'
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    group = 'br.edu.sinfonia'
+    version = '1.0.0'
+
+    // Funciona com JDK 17 ou 21 sem exigir instalacao separada de Java 17.
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+    }
+}
